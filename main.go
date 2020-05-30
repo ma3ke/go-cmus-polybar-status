@@ -104,10 +104,13 @@ func formatDuration(seconds int) string {
 }
 
 func statusIndicator(playing bool) string {
+	playchar := ">"
+	pausechar := "\""
+
 	if playing {
-		return ">"
+		return playchar
 	} else {
-		return "\""
+		return pausechar
 	}
 }
 
