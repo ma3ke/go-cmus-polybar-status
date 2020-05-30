@@ -6,6 +6,7 @@ import (
 	"strings"
 	"log"
 	"math"
+	"strconv"
 )
 
 func main() {
@@ -13,7 +14,14 @@ func main() {
 
 	fmt.Println(status[2])
 
-	fmt.Println(parseDuration(371))
+	
+
+	stat := parseStatus(status)
+
+	fmt.Println(parseDuration(stat.duration))
+	fmt.Println(parseDuration(stat.position))
+
+	fmt.Println(stat.artist, "\u2014", stat.title)
 }
 
 func getStatus() []string {
@@ -29,6 +37,43 @@ func getStatus() []string {
 	output := strings.Split(string(status), "\n")
 
 	return output
+}
+
+type status struct {
+	playing bool
+
+	title string
+	artist string
+	album string
+
+	duration int
+	position int
+}
+
+func parseStatus(s []string) (status) {
+	var stat status
+
+	playing := strings.TrimPrefix(s[0], "status ")
+	if playing == "playing" {
+		stat.playing = true
+	} else {
+		stat.playing = false
+	}
+
+	stat.title = strings.TrimPrefix(s[4], "tag title ")
+	stat.artist = strings.TrimPrefix(s[5], "tag artist ")
+	stat.album = strings.TrimPrefix(s[6], "tag album ")
+
+	var err1, err2 error
+
+	stat.duration, err1 = strconv.Atoi(strings.TrimPrefix(s[2], "duration "))
+	stat.position, err2 = strconv.Atoi(strings.TrimPrefix(s[3], "position "))
+
+	if err1 != nil || err2 != nil {
+		log.Fatal(err1, err2)
+	}
+
+	return stat
 }
 
 func parseDuration(seconds int) (int, int){
