@@ -1,5 +1,7 @@
 # go-cmus-polybar-status
-A verbosely named go program that outputs a string with cmus player status, title, and progress, which can be used to produce a polybar module which shows the cmus player status.
+A verbosely named go program that outputs a string with cmus player status, title, and progress, which can be used to produce a polybar module which shows the cmus player status. 
+
+The program parses the output of `cmus-remote -Q`, and returns a nicely formatted status module that can be used in polybar and other bars.
 
 ## Installation
 
