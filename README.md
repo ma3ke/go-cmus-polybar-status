@@ -29,7 +29,7 @@ To install the executable, you run the command `go install` inside of the projec
 ### Adding the module to polybar
 The following snippet can be added to your `.config/polybar/config` file. 
 
-```toml
+```
 [module/cmus-status]
 type = custom/exec
 exec = ~/go/bin/go-cmus-polybar-status || echo "error!"
@@ -40,8 +40,11 @@ interval = 1
 
 And to add the module to your bar, you can add it to one of the `modules` declarations. I have mine in the `modules-left` block.
 
-```toml
+```
+[bar/my-bar]
+...
 modules-left = bspwm alsa cmus-status
+...
 ```
 
 ## Configuration
