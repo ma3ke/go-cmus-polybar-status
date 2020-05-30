@@ -2,26 +2,27 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"strings"
-	"log"
 	"math"
 	"strconv"
 )
 
 func main() {
-	status := getStatus()
+	stat := parseStatus(getStatus())
 
-	fmt.Println(status[2])
+	sep := "  "
 
-	stat := parseStatus(status)
+	disp := stat.artist + " \u2014 " + stat.title // \u2014 represents an em dash.
+	ind := statusIndicator(stat.playing)
+	prog := progressIndicator(stat.duration, stat.position, 10)
+	dur := formatDuration(stat.duration)
+	pos := formatDuration(stat.position)
 
-	fmt.Println(parseDuration(stat.duration))
-	fmt.Println(parseDuration(stat.position))
+	output := []string {ind, pos, prog, dur, disp}
 
-	fmt.Println(stat.artist, "\u2014", stat.title) // \u2014 represents an em dash.
-
-	fmt.Println(progressIndicator(stat.duration, stat.position, 10))
+	fmt.Print(strings.Join(output, sep))
 }
 
 func getStatus() []string {
@@ -29,10 +30,9 @@ func getStatus() []string {
 
 	status, err := cmd.CombinedOutput()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Print("cmus not running.")
+		os.Exit(1)
 	}
-
-	fmt.Println(string(status))
 
 	output := strings.Split(string(status), "\n")
 
@@ -53,24 +53,31 @@ type status struct {
 func parseStatus(s []string) (status) {
 	var stat status
 
+	offset := 0
+
 	playing := strings.TrimPrefix(s[0], "status ")
 	if playing == "playing" {
 		stat.playing = true
 	} else {
+		if playing == "stopped" {
+			offset = -2
+		}
+
 		stat.playing = false
 	}
 
-	stat.title = strings.TrimPrefix(s[4], "tag title ")
-	stat.artist = strings.TrimPrefix(s[5], "tag artist ")
-	stat.album = strings.TrimPrefix(s[6], "tag album ")
+	stat.title = strings.TrimPrefix(s[4 + offset], "tag title ")
+	stat.artist = strings.TrimPrefix(s[5 + offset], "tag artist ")
+	stat.album = strings.TrimPrefix(s[6 + offset], "tag album ")
 
 	var err1, err2 error
 
-	stat.duration, err1 = strconv.Atoi(strings.TrimPrefix(s[2], "duration "))
-	stat.position, err2 = strconv.Atoi(strings.TrimPrefix(s[3], "position "))
+	stat.duration, err1 = strconv.Atoi(strings.TrimPrefix(s[2 + offset], "duration "))
+	stat.position, err2 = strconv.Atoi(strings.TrimPrefix(s[3 + offset], "position "))
 
 	if err1 != nil || err2 != nil {
-		log.Fatal(err1, err2)
+		fmt.Print("An error occurred.")
+		os.Exit(1)
 	}
 
 	return stat
@@ -88,12 +95,12 @@ func parseDuration(seconds int) (int, int){
 	}
 }
 
-func formatDuration(seconds int, hours bool) string {
+func formatDuration(seconds int) string {
 	sep := ":"
 
 	min, sec := parseDuration(seconds)
 
-	return min + sep + sec
+	return fmt.Sprintf("%02d%s%02d", min, sep, sec)
 }
 
 func statusIndicator(playing bool) string {
