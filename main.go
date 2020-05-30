@@ -14,14 +14,14 @@ func main() {
 
 	fmt.Println(status[2])
 
-	
-
 	stat := parseStatus(status)
 
 	fmt.Println(parseDuration(stat.duration))
 	fmt.Println(parseDuration(stat.position))
 
-	fmt.Println(stat.artist, "\u2014", stat.title)
+	fmt.Println(stat.artist, "\u2014", stat.title) // \u2014 represents an em dash.
+
+	fmt.Println(progressIndicator(stat.duration, stat.position, 10))
 }
 
 func getStatus() []string {
@@ -94,4 +94,16 @@ func statusIndicator(playing bool) string {
 	} else {
 		return "\""
 	}
+}
+
+func progressIndicator(dur, pos, len int) string {
+	linechar := "-"
+	pointerchar := "|"
+
+	progress := float64(pos) / float64(dur)
+
+	pre := strings.Repeat(linechar, int(progress * float64(len)))
+	suf := strings.Repeat(linechar, int((1 - progress) * float64(len)))
+
+	return pre + pointerchar + suf
 }
