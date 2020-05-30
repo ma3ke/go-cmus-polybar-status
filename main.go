@@ -88,6 +88,14 @@ func parseDuration(seconds int) (int, int){
 	}
 }
 
+func formatDuration(seconds int, hours bool) string {
+	sep := ":"
+
+	min, sec := parseDuration(seconds)
+
+	return min + sep + sec
+}
+
 func statusIndicator(playing bool) string {
 	if playing {
 		return ">"
