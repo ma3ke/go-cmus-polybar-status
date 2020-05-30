@@ -1,0 +1,8 @@
+# Add this module to your ~/.config/polybar/config file,
+# and DON'T FORGET to add the `cmus-status` module to the 
+# list of modules in your [bar/bar-name] section :).
+
+[module/cmus-status]
+type = custom/exec
+exec = ~/go/bin/go-cmus-polybar-status || echo "error!"
+interval = 1
