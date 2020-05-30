@@ -8,7 +8,7 @@ The program parses the output of `cmus-remote -Q`, and returns a nicely formatte
 ## Installation
 
 ### Prerequisites
-In order to install this program, it is required that you have installed [`go`](golang.org) and that your `$GOPATH` is in your `$PATH` shell variable.
+In order to install this program, it is required that you have installed [`go`](https://golang.org) and that your `$GOPATH` is in your `$PATH` shell variable.
 
 You can check whether you have your `$GOPATH` in your `path`, by trying 
 
