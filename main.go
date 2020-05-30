@@ -42,3 +42,11 @@ func parseDuration(seconds int) (int, int){
 		return int(min), int(sec)
 	}
 }
+
+func statusIndicator(playing bool) string {
+	if playing {
+		return ">"
+	} else {
+		return "\""
+	}
+}
