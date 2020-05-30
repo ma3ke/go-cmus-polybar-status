@@ -1,5 +1,13 @@
 package main
 
+// A cmus status module program
+// Outputs a single line string with the status of the track currently playing
+// on your cmus player, through cmus-remote.
+//
+// Koen Westendorp, 2020
+// koenw.gitlab.io
+// GitHub: koenwestendorp
+
 import (
 	"fmt"
 	"os"
@@ -12,14 +20,18 @@ import (
 func main() {
 	stat := parseStatus(getStatus())
 
+	// The separator placed in between the different elements.
 	sep := "  "
 
+	// The elements are defined here. You can add your own if you like.
 	disp := stat.artist + " \u2014 " + stat.title // \u2014 represents an em dash.
 	ind := statusIndicator(stat.playing)
 	prog := progressIndicator(stat.duration, stat.position, 10)
 	dur := formatDuration(stat.duration)
 	pos := formatDuration(stat.position)
+	// album := "(" + stat.album + ")" 
 
+	// This array can be rearranged, in order to modify the output.
 	output := []string {ind, pos, prog, dur, disp}
 
 	fmt.Print(strings.Join(output, sep))
