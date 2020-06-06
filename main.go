@@ -6,7 +6,7 @@ package main
 //
 // Koen Westendorp, 2020
 // koenw.gitlab.io
-// GitHub: koenwestendorp
+// GitHub: KoenWestendorp
 
 import (
 	"fmt"
@@ -18,15 +18,19 @@ import (
 )
 
 func main() {
-	stat := parseStatus(getStatus())
+    stat := parseStatus(getStatus())
 
+    /*--- CONFIG ---*/
 	// The separator placed in between the different elements.
 	sep := "  "
+
+    // Set the length of the progress bar.
+    barLength := 7
 
 	// The elements are defined here. You can add your own if you like.
 	disp := stat.artist + " \u2014 " + stat.title // \u2014 represents an em dash.
 	ind := statusIndicator(stat.playing)
-	prog := progressIndicator(stat.duration, stat.position, 10)
+	prog := progressIndicator(stat.duration, stat.position, barLength)
 	dur := formatDuration(stat.duration)
 	pos := formatDuration(stat.position)
 	// album := "(" + stat.album + ")" 
@@ -42,7 +46,6 @@ func getStatus() []string {
 
 	status, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Print("cmus not running.")
 		os.Exit(1)
 	}
 
@@ -88,7 +91,6 @@ func parseStatus(s []string) (status) {
 	stat.position, err2 = strconv.Atoi(strings.TrimPrefix(s[3 + offset], "position "))
 
 	if err1 != nil || err2 != nil {
-		fmt.Print("An error occurred.")
 		os.Exit(1)
 	}
 
@@ -112,6 +114,7 @@ func formatDuration(seconds int) string {
 
 	min, sec := parseDuration(seconds)
 
+    // Format: '04:20'.
 	return fmt.Sprintf("%02d%s%02d", min, sep, sec)
 }
 
